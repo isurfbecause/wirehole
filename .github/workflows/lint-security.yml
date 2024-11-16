@@ -1,0 +1,56 @@
+name: Terraform Lint and Security Checks
+
+on:
+  push: # Triggers on every push
+    branches: # Specify branches to include (master/main or all branches)
+      - '**' # This runs on all branches, including master/main
+  pull_request: # Triggers on pull requests for code review
+    branches:
+      - '**'
+
+jobs:
+  terraform-lint:
+    name: Terraform Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0 # Update as needed
+
+      - name: Install TFLint (Latest)
+        run: |
+          latest_version=$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | jq -r .tag_name)
+          curl -sLo tflint.zip https://github.com/terraform-linters/tflint/releases/download/$latest_version/tflint_linux_amd64.zip
+          unzip tflint.zip -d /usr/local/bin
+          tflint --version
+
+      - name: Run Terraform Fmt
+        run: terraform fmt -check
+
+      - name: Run Terraform Validate
+        run: terraform validate
+
+      - name: Run TFLint
+        run: tflint
+
+  terraform-security:
+    name: Terraform Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov Security Scan
+        run: checkov --directory .
