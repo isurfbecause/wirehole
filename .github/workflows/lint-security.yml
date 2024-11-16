@@ -8,6 +8,9 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read # Explicitly set top-level permissions to read-only
+
 jobs:
   terraform-lint:
     name: Terraform Lint
