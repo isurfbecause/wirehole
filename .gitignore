@@ -1,0 +1,4 @@
+.terraform.lock.hcl
+.terraform/providers/registry.terraform.io/digitalocean/digitalocean/2.43.0/darwin_arm64
+.terraform/modules
+terraform.tfstate
