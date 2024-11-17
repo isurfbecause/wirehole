@@ -20,7 +20,7 @@ module "fw_label" {
 }
 
 # Create a new Web Droplet in the nyc2 region
-# checkov:skip=CKV_DIO_2:SSH key is managed via 1Password
+# checkov:skip=CKV_DIO_2:SSH key is managed via 1Passwor
 resource "digitalocean_droplet" "main" {
   image  = var.vm.image
   name   = var.vm.name
